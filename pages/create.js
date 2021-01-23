@@ -30,7 +30,7 @@ const Add = ({items}) => {
 
             fetch('/api/create', options)
             .then( (res) => {
-                 if(res.status === 203) {setBtnDisabled(false), setError(true)}
+                 if(res.status === 203) {setBtnDisabled(false); setError(true)}
                  if(res.status === 200) {
                      setBtnDisabled(false) 
                      formRef.current.reset()    
