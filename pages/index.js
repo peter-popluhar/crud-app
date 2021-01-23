@@ -1,9 +1,10 @@
-import React, {useRef, useState, useEffect} from 'react'
+import React, {useEffect} from 'react'
 import { connectToDatabase } from '../util/mongodb'
-const { MONGO_DB_COLLECTION } = process.env
 import List from '../components/list'
 import Form from '../components/form/form'
 import {useItems} from '../context/items-context'
+
+const { MONGO_DB_COLLECTION } = process.env
 
 export default function Home({ isConnected, items }) {
   const {setData} = useItems()
@@ -31,14 +32,19 @@ export default function Home({ isConnected, items }) {
   )
 }
 
-export async function getServerSideProps() {
+export async function getStaticProps() {
+  let items = []
   const { client, db } = await connectToDatabase()
   const isConnected = await client.isConnected()
 
-  let items = await db
-        .collection(MONGO_DB_COLLECTION)
-        .find({})
-        .toArray();
+  try {
+    items = await db
+      .collection(MONGO_DB_COLLECTION)
+      .find({})
+      .toArray();
+  } catch(e) {
+    console.log(e)
+  }
 
   return {
     props: { 
